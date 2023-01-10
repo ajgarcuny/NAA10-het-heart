@@ -1,0 +1,86 @@
+---
+title: "Naa10 het heart"
+output: html_document
+---
+
+Naa10 heterozygous mutant (+/- or +/-) analysis
+
+
+```{r}
+library(tidyverse)
+
+heart <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6Zsk-kGVqB3DlzX_VtZE5cRNqqM5NX5rfdp5t1kuEkH6PAKf76ozEFmqklqKIFZqWvjzcx_mOV5K6/pub?gid=0&single=true&output=csv",
+                  header = T)
+
+
+```
+
+```{r}
+head(heart)
+
+##double-check genotypes of biological replicates
+```
+
+
+```{r}
+heart$Name <- as.factor(heart$Name)
+heart$Replicate <- as.factor (heart$Replicate)
+
+head(heart)
+
+##changed Name and Replicate from integer data to replicate data
+```
+
+
+```{r}
+ggplot(heart, aes(x = heart$Name,
+                  y = heart$Normalized.Signal,
+                  shape = heart$Replicate,
+                  color = heart$Genotype))+
+         geom_point()+
+  xlab("sample ID")+
+  ylab("NAA10 signal normalized to
+       REVERT total protein stain")+
+   ggtitle("NAA10 levels in Naa10
+          heterozygous mutant heart")
+
+##verify genotypes of 4942 and 4924 (may be flipped in source data)
+```
+
+```{r}
+ggplot(heart,aes(x = heart$Genotype,
+                 y = heart$Normalized.Signal,
+                 color = heart$Name,
+                 shape = heart$Replicate))+
+  geom_point()+
+  xlab("Naa10 genotype")+
+  ylab("NAA10 signal normalized to
+       REVERT total protein stain")+
+  ggtitle("NAA10 levels in Naa10
+          heterozygous mutant heart")
+```
+
+
+```{r}
+heart_fold <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6Zsk-kGVqB3DlzX_VtZE5cRNqqM5NX5rfdp5t1kuEkH6PAKf76ozEFmqklqKIFZqWvjzcx_mOV5K6/pub?gid=194880494&single=true&output=csv",
+                       header = T)
+
+head(heart_fold)
+```
+
+```{r}
+ggplot(heart, aes(x = heart$Genotype,
+                       y = heart$fold.change))+
+  geom_point()
+
+##normalized Naa10 +/+ to 1.0 fold-change (ie, no change in Naa10 levels)
+```
+
+
+
+Considerations for the genotype analysis
+
+1. Plot mean change of biological replicates (ie, each sample was blotted 2 times as of 10 January 2022)
+2. Express data as fold-changes of groups
+  a. Return to source data
+3. normalize Naa10 +/+ to 1.0
