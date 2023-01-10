@@ -33,10 +33,17 @@ head(heart)
 
 
 ```{r}
-ggplot(heart, aes(x = heart$Name,
-                  y = heart$Normalized.Signal,
-                  shape = heart$Replicate,
-                  color = heart$Genotype))+
+t.test(heart$Normalized.Signal~heart$Genotype,
+       paired = F,
+       var.equal = FALSE)
+```
+
+
+```{r}
+ggplot(heart, aes(x = Name,
+                  y = Normalized.Signal,
+                  shape = Replicate,
+                  color = Genotype))+
          geom_point()+
   xlab("sample ID")+
   ylab("NAA10 signal normalized to
@@ -48,10 +55,10 @@ ggplot(heart, aes(x = heart$Name,
 ```
 
 ```{r}
-ggplot(heart,aes(x = heart$Genotype,
-                 y = heart$Normalized.Signal,
-                 color = heart$Name,
-                 shape = heart$Replicate))+
+ggplot(heart,aes(x = Genotype,
+                 y = Normalized.Signal,
+                 color = Name,
+                 shape = Replicate))+
   geom_point()+
   xlab("Naa10 genotype")+
   ylab("NAA10 signal normalized to
@@ -59,6 +66,8 @@ ggplot(heart,aes(x = heart$Genotype,
   ggtitle("NAA10 levels in Naa10
           heterozygous mutant heart")
 ```
+
+
 
 
 ```{r}
@@ -69,8 +78,8 @@ head(heart_fold)
 ```
 
 ```{r}
-ggplot(heart, aes(x = heart$Genotype,
-                       y = heart$fold.change))+
+ggplot(heart, aes(x = Genotype,
+                       y = fold.change))+
   geom_point()
 
 ##normalized Naa10 +/+ to 1.0 fold-change (ie, no change in Naa10 levels)
