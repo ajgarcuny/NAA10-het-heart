@@ -3,11 +3,21 @@ title: "Naa10 het heart"
 output: html_document
 toc: true
 toc_depth: 2
+toc_float: true
 ---
 
-Naa10 heterozygous mutant (+/- or +/-) analysis
+Naa10 heterozygous mutant (+/- or +/-) heart lysate analysis
 
+Hearts were obtained from biological replicates of Naa10 heterozygous mutants (+/- or -/+; n = 3) and wild-type controls (+/+; n = 3). Each biological replicate was assayed twice.
 
+Fresh or thawed flash-frozen tissue were lysed in RIPA buffer supplemented with protease inhibitor tablets (Sigma-Aldrich, #R0278; Roche #11836153001). Tissue was
+homogenized using a handheld motorized microtube pestle. Lysate was then cleared after centrifugation (15,000 rcf, 20 minutes). Total protein was quantified using Advanced Protein Assay Reagent (Cytoskeleton Inc., #ADV02). Lysate was then diluted in 2X SDS-PAGE Sample Buffer (5% v/v 2-mercaptoethanol) and heated (95 - 100ºC, 5 minutes).
+
+20 µg of protein were resolved on a a 10% mini-PROTEAN TGX gel (Bio-Rad, #4561033). SDS-PAGE gel was equilibrated in chilled Towbin's transfer buffer. Proteins were transferred from gel to 0.2 µm nitrocellulose membrane (Amersham) at 100V, 30 minutes under refrigeration. After transfer, membrane was allowed to dry at least 1 hour. Membranes were stained for transfer verification and total protein sing REVERT 700 total protein stain (Li-cor, #926-11015).
+
+After stain removal, membrane was blocked in TBS with 5% non-fat dry milk (1 hr, RT). After decanting blocking buffer, membrane was incubated (overnight, 4ºC) in 1/500 anti-NAA10 (diluted in blocking buffer supplemented with 0.1% v/v Tween-20). Membrane was then washed 5 minutes in TBS-T for 3 repetitions. Membrane was then incubated (1 hr, RT) using 1/20000 goat-anti-rabbit IR800 CW (Li-cor, 926-32211). Membrane was again washed 5 minutes in TBS-T for 3 repetitions and then briefly rinsed in TBS. Membrane was allowed to dry before imaging.
+
+Immunostained membranes were imaged on Odyssey Classic (Li-cor). Analysis was conducted and plotted using Empiria Studio (Li-cor) and R.
 
 #Source data
 ##individual dataset
@@ -107,7 +117,7 @@ ggplot(heart,aes(x = Genotype,
                  y = Normalized.Signal))+
   geom_point(aes(color = Name,
                  shape = Replicate),
-             alpha = 0.2)+
+             alpha = 0.9)+
   geom_errorbar(data = heart_sum1,
                 aes(ymin = Normalized.Signal-sd,
                     ymax = Normalized.Signal+sd,
