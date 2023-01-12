@@ -1,9 +1,13 @@
 ---
 title: "Naa10 het heart"
 output: html_document
+toc: true
+toc_depth: 2
 ---
 
 Naa10 heterozygous mutant (+/- or +/-) analysis
+
+
 
 #Source data
 ##individual dataset
