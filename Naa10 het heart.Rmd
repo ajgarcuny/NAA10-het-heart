@@ -230,12 +230,3 @@ ggplot(heart, aes(x = Genotype,
   geom_point()
 
 ```
-
-
-
-Considerations for the genotype analysis
-
-1. Plot mean change of biological replicates (ie, each sample was blotted 2 times as of 10 January 2022)
-2. Express data as fold-changes of groups
-  a. Return to source data
-3. normalize Naa10 +/+ to 1.0
