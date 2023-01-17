@@ -67,6 +67,8 @@ ggplot(heart,aes(x = Genotype,
 
 ##Group-mean datasets in dplyr
 ```{r}
+#I am more familiar with using summarySE in Rmisc to generate a dataframe that contains group means
+
 heart_gd <- group_by(heart,Genotype)
 
 heart_gd <- summarise(heart)
@@ -91,8 +93,8 @@ heart_sum
 
 ```{r}
 ##Normalized NAA10 signal is grouped by genotype.
-##N = 6 for both because the 3 biological replicates in each genotype
-##were assayed twice
+##N = 6 for both genotypes because the 3 biological replicates in each genotype were assayed twice
+##this gives me the group mean dataframe that I will need to layer onto the plot of individual observartions
 
 heart_sum1 <- summarySE(heart, measurevar="Normalized.Signal", groupvars=c("Genotype"))
 
@@ -100,6 +102,7 @@ heart_sum1
 ```
 
 ```{r}
+#group means plus standards
 #essentially looking to plot this onto the individual data plot
 ggplot(heart_sum1, aes(x = Genotype, y = Normalized.Signal))+
   geom_point()+
@@ -109,21 +112,23 @@ ggplot(heart_sum1, aes(x = Genotype, y = Normalized.Signal))+
 
 ###individual data and group means plot
 ```{r}
-#essentially what I want
-#mean is indicated in red
-#lost detail at the level of individual data points because present code cannot indicate biological and technical replicates
+#ggplot(heart) plots Normalized.Signal as a function of Genotype
+#geom_point plots individual observations on this plot
+#geom_errorbar points to my group means df heart_sum1 and the bounds of the mean+/- standard error bar
+#the successive geom_point plots the mean; specify color so it does not conflict with the color call in the first geom_point
 
 ggplot(heart,aes(x = Genotype,
                  y = Normalized.Signal))+
   geom_point(aes(color = Name,
                  shape = Replicate),
-             alpha = 0.9)+
+             alpha = 1.0)+
   geom_errorbar(data = heart_sum1,
                 aes(ymin = Normalized.Signal-sd,
                     ymax = Normalized.Signal+sd,
                     width = 0.2))+
   geom_point(data = heart_sum1,
              size = 0.4,
+             alpha = 1.0,
              color = "red")+
   xlab("Naa10 genotype")+
   ylab("NAA10 signal normalized to
@@ -143,19 +148,35 @@ ggplot(heart,aes(x = Genotype,
 
 
 
-##Unpaired t-test of NAA10 signal
+##Unpaired t-test of NAA10 signal grouped by Genotyp
+
+Null hypothesis: there is no mean difference in NAA10 signal between Naa10 female
+genotypes
+
+Alternative: there is a difference in NAA10 signal between Naa10 female genotypes
 ```{r}
 t.test(heart$Normalized.Signal~heart$Genotype,
        paired = F,
        var.equal = FALSE)
 ```
-Null hypothesis: there is no mean difference in NAA10 signal between Naa10 female
-genotypes
 
-Alternative: there is a difference in NAA10 signal between Naa10 female genotypes
 
 According to Welch's two sample t-test, there is a significant difference in
-NAA10 signal between Naa10 female genotypes.
+NAA10 signal between Naa10 female genotypes (t = -14.5, df = 9.9, p < 0.05).
+
+
+##paired t-test of NAA10 signal between replicates of individual animals
+Null hypothesis: there is no difference in NAA10 signal of individual livers on replicate blots
+Alternative hypothesis: there is a difference in NAA10 signal of individual livers on replicate blots
+
+```{r}
+#paired t-test because individual biological replicate was technically replicated twice
+
+t.test(heart$Normalized.Signal~heart$Replicate,
+       paired = T,
+       var.equal = FALSE)
+```
+According to the paired t-test (t = -0.18, df = 5, p = 0.87), I fail to reject the null hypothesis. Ie, when I analyze the normalized NAA10 signal in technical replicates of each biological replicate, there is no difference in the NAA10 signal between technical replicates.
 
 #Other plot ideas
 ```{r}
