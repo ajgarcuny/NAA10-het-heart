@@ -632,9 +632,10 @@ female genotypes</p>
 difference in NAA10 signal between Naa10 female genotypes (t = -14.5, df
 = 9.9, p &lt; 0.05).</p>
 <p>##paired t-test of NAA10 signal between replicates of individual
-animals Null hypothesis: there is no difference in NAA10 signal of
-individual livers on replicate blots Alternative hypothesis: there is a
-difference in NAA10 signal of individual livers on replicate blots</p>
+animals</p>
+<p>Null hypothesis: there is no difference in NAA10 signal of individual
+livers on replicate blots Alternative hypothesis: there is a difference
+in NAA10 signal of individual livers on replicate blots</p>
 <pre class="r"><code>#paired t-test because individual biological replicate was technically replicated twice
 
 t.test(heart$Normalized.Signal~heart$Replicate,

@@ -166,6 +166,7 @@ NAA10 signal between Naa10 female genotypes (t = -14.5, df = 9.9, p < 0.05).
 
 
 ##paired t-test of NAA10 signal between replicates of individual animals
+
 Null hypothesis: there is no difference in NAA10 signal of individual livers on replicate blots
 Alternative hypothesis: there is a difference in NAA10 signal of individual livers on replicate blots
 
@@ -176,7 +177,10 @@ t.test(heart$Normalized.Signal~heart$Replicate,
        paired = T,
        var.equal = FALSE)
 ```
-According to the paired t-test (t = -0.18, df = 5, p = 0.87), I fail to reject the null hypothesis. Ie, when I analyze the normalized NAA10 signal in technical replicates of each biological replicate, there is no difference in the NAA10 signal between technical replicates.
+According to the paired t-test (t = -0.18, df = 5, p = 0.87),
+I fail to reject the null hypothesis. Ie, when I analyze the normalized NAA10 signal
+in technical replicates of each biological replicate, there is no difference in the
+NAA10 signal between technical replicates.
 
 #Other plot ideas
 ```{r}
