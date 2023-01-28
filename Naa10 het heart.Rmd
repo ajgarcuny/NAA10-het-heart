@@ -78,6 +78,9 @@ heart_gd
 
 
 #Summary data of Naa10 het heart and hypothesis testing
+```{r}
+install.packages("Rmisc")
+```
 
 ```{r}
 ##Summary statistics for Normalized NAA10 signal, grouped by genotype and technical replicate
