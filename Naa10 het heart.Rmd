@@ -24,8 +24,7 @@ Immunostained membranes were imaged on Odyssey Classic (Li-cor). Analysis was co
 ```{r}
 library(tidyverse)
 
-heart <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6Zsk-kGVqB3DlzX_VtZE5cRNqqM5NX5rfdp5t1kuEkH6PAKf76ozEFmqklqKIFZqWvjzcx_mOV5K6/pub?gid=0&single=true&output=csv",
-                  header = T)
+heart <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQB2mYpWBkzsQdS7n3FiqKXF70ePN7vz6znR5W75U2IFpwV953plycKWctxmu3q0A/pub?gid=143452519&single=true&output=csv", header = T)
 
 
 ```
@@ -79,7 +78,7 @@ heart_gd
 
 #Summary data of Naa10 het heart and hypothesis testing
 ```{r}
-install.packages("Rmisc")
+install.packages("Rmisc", repos = "http://cran.us.r-project.org")
 ```
 
 ```{r}
@@ -151,7 +150,7 @@ ggplot(heart,aes(x = Genotype,
 
 
 
-##Unpaired t-test of NAA10 signal grouped by Genotyp
+##Unpaired t-test of NAA10 signal grouped by Genotype
 
 Null hypothesis: there is no mean difference in NAA10 signal between Naa10 female
 genotypes
@@ -173,13 +172,6 @@ NAA10 signal between Naa10 female genotypes (t = -14.5, df = 9.9, p < 0.05).
 Null hypothesis: there is no difference in NAA10 signal of individual livers on replicate blots
 Alternative hypothesis: there is a difference in NAA10 signal of individual livers on replicate blots
 
-```{r}
-#paired t-test because individual biological replicate was technically replicated twice
-
-t.test(heart$Normalized.Signal~heart$Replicate,
-       paired = T,
-       var.equal = FALSE)
-```
 According to the paired t-test (t = -0.18, df = 5, p = 0.87),
 I fail to reject the null hypothesis. Ie, when I analyze the normalized NAA10 signal
 in technical replicates of each biological replicate, there is no difference in the
