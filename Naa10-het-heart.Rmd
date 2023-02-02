@@ -38,6 +38,7 @@ head(heart)
 
 ```{r}
 ##switched Name and Replicate fromn integers to factors
+heart$ID <- as.factor(heart$ID)
 heart$Name <- as.factor(heart$Name)
 heart$Replicate <- as.factor (heart$Replicate)
 heart$Genotype <- as.factor(heart$Genotype)
@@ -106,13 +107,14 @@ heart_sum1
 ```{r}
 #group means plus standards
 #essentially looking to plot this onto the individual data plot
+library(ggplot2)
 ggplot(heart_sum1, aes(x = Genotype, y = Normalized.Signal))+
   geom_point()+
   geom_errorbar(aes(ymin = Normalized.Signal - sd,
                 ymax = Normalized.Signal + sd))
 ```
 
-###individual data and group means plot
+#individual data and group means plot
 ```{r}
 #ggplot(heart) plots Normalized.Signal as a function of Genotype
 #geom_point plots individual observations on this plot
@@ -121,132 +123,148 @@ ggplot(heart_sum1, aes(x = Genotype, y = Normalized.Signal))+
 
 ggplot(heart,aes(x = Genotype,
                  y = Normalized.Signal))+
-  geom_point(aes(color = Name,
-                 shape = Replicate),
-             alpha = 1.0)+
+  stat_summary(fun= mean, geom="point",
+               shape=3, size=5, color="red", fill="black")+
   geom_errorbar(data = heart_sum1,
                 aes(ymin = Normalized.Signal-sd,
                     ymax = Normalized.Signal+sd,
-                    width = 0.2))+
-  geom_point(data = heart_sum1,
-             size = 0.4,
-             alpha = 1.0,
-             color = "red")+
+                    width = 0.25))+
+    geom_boxplot(outlier.shape = NA,
+               alpha = 0.1)+
+  geom_point(aes(color = Name,
+                 shape = Replicate),
+             alpha = 1,
+                 position = position_jitterdodge())+
   xlab("Naa10 genotype")+
   ylab("NAA10 signal normalized to
        REVERT total protein stain")+
-  ggtitle("NAA10 levels in Naa10
-          heterozygous mutant heart")
+  ggtitle("")
 ```
 
 
 
-
-
-###dplyr group data
 ```{r}
+ggplot(heart,aes(x = Genotype,
+                 y = Normalized.Signal))+
+  stat_summary(fun= mean, geom="point",
+               shape=3, size=5, color="red", fill="black")+
+  geom_errorbar(data = heart_sum1,
+                aes(ymin = Normalized.Signal-sd,
+                    ymax = Normalized.Signal+sd,
+                    width = 0.25))+
+  geom_point(aes(color = ID,
+                 shape = Replicate),
+             alpha = 1)+
+  xlab("Naa10 genotype")+
+  ylab("NAA10 signal normalized to
+       REVERT total protein stain")+
+  ggtitle("")
+```
 
+
+##jittered plot
+```{r}
+#same plot as above, but with jittered poitns
+
+ggplot(heart,aes(x = Genotype,
+                 y = Normalized.Signal))+
+  geom_point(aes(color = ID,
+                 shape = Replicate),
+             alpha = 1,
+                 position = position_jitterdodge())+
+  geom_boxplot(outlier.shape = NA,
+               alpha = 0.1)+
+  stat_summary(fun= mean, geom="point",
+               shape=3, size=5,stroke = 1,color="red", fill="black")+
+  geom_errorbar(data = heart_sum1,
+                aes(ymin = Normalized.Signal-sd,
+                    ymax = Normalized.Signal+sd,
+                    width = 0.25))+
+  xlab("Naa10 genotype")+
+  ylab("NAA10 signal normalized to
+       REVERT total protein stain")+
+  ggtitle("")
 ```
 
 
 
-##Unpaired t-test of NAA10 signal grouped by Genotype
-
-Null hypothesis: there is no mean difference in NAA10 signal between Naa10 female
+#hypothesis testing
+##parametric
+###two-sample t-test
+null hypothesis: there is no mean difference in NAA10 signal between Naa10 female
 genotypes
 
 Alternative: there is a difference in NAA10 signal between Naa10 female genotypes
 ```{r}
+##Unpaired t-test of NAA10 signal grouped by Genotype
 t.test(heart$Normalized.Signal~heart$Genotype,
        paired = F,
-       var.equal = FALSE)
+       var.equal = F)
 ```
 
+I fail to reject the null hypothesis
 
-According to Welch's two sample t-test, there is a significant difference in
-NAA10 signal between Naa10 female genotypes (t = -14.5, df = 9.9, p < 0.05).
-
-
-##paired t-test of NAA10 signal between replicates of individual animals
-
-Null hypothesis: there is no difference in NAA10 signal of individual livers on replicate blots
-Alternative hypothesis: there is a difference in NAA10 signal of individual livers on replicate blots
-
-According to the paired t-test (t = -0.18, df = 5, p = 0.87),
-I fail to reject the null hypothesis. Ie, when I analyze the normalized NAA10 signal
-in technical replicates of each biological replicate, there is no difference in the
-NAA10 signal between technical replicates.
-
-#Other plot ideas
-```{r}
-#plotted error bars for intra-subject variation
-#need also group error bar (mean +/- sd)
-gg_heart <- ggplot(heart,aes(x = Genotype,
-                 y = Normalized.Signal,
-                 color = Name,
-                 shape = Replicate))+
-  geom_point()+
-  ylab("NAA10 signal normalized to
-       REVERT total protein stain")+
-  ggtitle("NAA10 levels in Naa10
-          heterozygous mutant heart")
-
-gg_heart+
-  geom_errorbar(aes(ymin = Avg..Norm..Signal-Std..Dev.,
-                           ymax = Avg..Norm..Signal+Std..Dev.,),
-                position = "dodge",
-                width = 0.2)
-
-```
-
-```{r}
-ggplot(heart,aes(x = Genotype,
-                 y = Normalized.Signal,
-                 color = Name,))+
-  geom_point()+
-  geom_errorbar(aes(ymin = Avg..Norm..Signal-Std..Dev.,
-                    ymax = Avg..Norm..Signal+Std..Dev.,
-                    width = 0.2))+
-  ylab("NAA10 signal normalized to
-       REVERT total protein stain")+
-  ggtitle("NAA10 levels in Naa10
-          heterozygous mutant heart")
-```
-
-
-###Plotted by biological replicate
-```{r}
-ggplot(heart, aes(x = Name,
-                  y = Normalized.Signal,
-                  shape = Replicate,
-                  color = Genotype))+
-         geom_point()+
-  xlab("sample ID")+
-  ylab("NAA10 signal normalized to
-       REVERT total protein stain")+
-   ggtitle("NAA10 levels in Naa10
-          heterozygous mutant heart")
-
-##verify genotypes of 4942 and 4924 (may be flipped in source data)
-```
-
-
-
-
-This plots absolute signal and indicates biological replicate (color) and
-technical replicate (shape)
+###differences between replicates
+Null hypothesis: there is no difference in NAA10 signal of individual hearts on replicate blots
+Alternative hypothesis: there is a difference in NAA10 signal of individual hearts on replicate blots
 
 
 ```{r}
-heart_fold <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6Zsk-kGVqB3DlzX_VtZE5cRNqqM5NX5rfdp5t1kuEkH6PAKf76ozEFmqklqKIFZqWvjzcx_mOV5K6/pub?gid=194880494&single=true&output=csv",
-                       header = T)
-
-head(heart_fold)
+install.packages("car",repos = "http://cran.us.r-project.org")
 ```
 
 ```{r}
-ggplot(heart, aes(x = Genotype,
-                       y = fold.change))+
-  geom_point()
+library(car)
+heart.aov <- lm(Normalized.Signal~Replicate, heart)
+summary(heart.aov)
+Anova(heart.aov,type = "III")
 
 ```
+
+###expanded model that may drive changes in Normalized Signal
+```{r}
+heart1.aov <- lm(Normalized.Signal~Replicate*Genotype,heart)
+
+summary(heart1.aov)
+Anova(heart1.aov,type = "III")
+```
+
+
+##non-parametric testing
+###NAA10 signal and Genotype
+I have a big outlier in each genotype, so I will perform
+non-parametric hypothesis tests in addition to 
+
+```{r}
+#Wilcox test instead of Welch's t-test
+wilcox.test(Normalized.Signal~Genotype,heart)
+```
+
+p = 0.03; I reject the null hypothesis.
+
+
+###Does replicate blot drive differences in NAA10 signal
+```{r}
+kruskal.test(Normalized.Signal~Replicate,heart)
+```
+I reject the null hypothesis.
+
+
+
+###does median NAA10 signal differ?
+```{r}
+install.packages("coin", repo ="http://cran.us.r-project.org")
+```
+
+```{r}
+library(coin)
+
+median_test(Normalized.Signal~Genotype,heart)
+```
+
+
+
+
+
+
+
