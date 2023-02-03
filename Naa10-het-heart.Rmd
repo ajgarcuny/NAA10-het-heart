@@ -58,8 +58,7 @@ ggplot(heart,aes(x = Genotype,
   ggtitle("NAA10 levels in Naa10
           heterozygous mutant heart")
 
-##if we added jitter as another layer, the data points would be duplicated
-##in the resultant plot!
+##if we added jitter as another layer, the data points would be duplicated in the resultant plot!
 ```
 
 
@@ -104,6 +103,8 @@ heart_sum1 <- summarySE(heart, measurevar="Normalized.Signal", groupvars=c("Geno
 heart_sum1
 ```
 
+
+#plotted heart data
 ```{r}
 #group means plus standards
 #essentially looking to plot this onto the individual data plot
@@ -114,7 +115,7 @@ ggplot(heart_sum1, aes(x = Genotype, y = Normalized.Signal))+
                 ymax = Normalized.Signal + sd))
 ```
 
-#individual data and group means plot
+##individual data and group means plot
 ```{r}
 #ggplot(heart) plots Normalized.Signal as a function of Genotype
 #geom_point plots individual observations on this plot
@@ -162,9 +163,9 @@ ggplot(heart,aes(x = Genotype,
 ```
 
 
-##jittered plot
+##main plot
 ```{r}
-#same plot as above, but with jittered points
+#same plot as above, but with jitterd points
 library(ggplot2)
 ggplot(heart,aes(x = Genotype,
                  y = Normalized.Signal))+
@@ -188,6 +189,10 @@ ggplot(heart,aes(x = Genotype,
 ```
 
 
+May consider combining the liver and heart genotype data so
+I can plot genotype on X-axis and normalized NAA10 signal on
+Y-axis as usual. If I combine liver and heart, I can have 2 box
+plots on each genotype pertaining to organ.
 
 #hypothesis testing
 ##parametric
