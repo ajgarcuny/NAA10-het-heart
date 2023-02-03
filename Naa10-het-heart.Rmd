@@ -24,7 +24,7 @@ Immunostained membranes were imaged on Odyssey Classic (Li-cor). Analysis was co
 ```{r}
 library(tidyverse)
 
-heart <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQB2mYpWBkzsQdS7n3FiqKXF70ePN7vz6znR5W75U2IFpwV953plycKWctxmu3q0A/pub?gid=1350972961&single=true&output=csv", header = T)
+heart <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQB2mYpWBkzsQdS7n3FiqKXF70ePN7vz6znR5W75U2IFpwV953plycKWctxmu3q0A/pub?gid=1982809102&single=true&output=csv", header = T)
 
 
 ```
@@ -164,13 +164,14 @@ ggplot(heart,aes(x = Genotype,
 
 ##jittered plot
 ```{r}
-#same plot as above, but with jittered poitns
-
+#same plot as above, but with jittered points
+library(ggplot2)
 ggplot(heart,aes(x = Genotype,
                  y = Normalized.Signal))+
   geom_point(aes(color = ID,
                  shape = Replicate),
-             alpha = 1,
+             alpha = 2,
+             size = 2,
                  position = position_jitterdodge())+
   geom_boxplot(outlier.shape = NA,
                alpha = 0.1)+
@@ -183,7 +184,7 @@ ggplot(heart,aes(x = Genotype,
   xlab("Naa10 genotype")+
   ylab("NAA10 signal normalized to
        REVERT total protein stain")+
-  ggtitle("")
+  theme_bw(base_size = 12, base_family = "Helvetica")
 ```
 
 
